@@ -9,3 +9,5 @@ const router = express.Router();
 router.get("/", auth, GET_ALL);
 router.post("/", validate(questionSchema), auth, INSERT);
 router.delete("/:id", auth, DELETE_BY_ID);
+
+export default router;

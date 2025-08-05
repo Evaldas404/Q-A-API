@@ -1,5 +1,5 @@
 import { v4 as uuidv4 } from "uuid";
-import questionModel from "../models/game.js";
+import questionModel from "../models/question.js";
 
 export const GET_ALL = async (req, res) => {
   try {
