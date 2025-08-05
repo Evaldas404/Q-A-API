@@ -6,8 +6,8 @@ import answerSchema from "../schemas/answer.js";
 
 const router = express.Router();
 
-router.get("/", auth, GET_BY_ID);
-router.post("/", validate(answerSchema), auth, INSERT);
+router.get("/question/:id", auth, GET_BY_ID);
+router.post("/question/:id", validate(answerSchema), auth, INSERT);
 router.delete("/:id", auth, DELETE_BY_ID);
 
 export default router;

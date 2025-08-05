@@ -20,8 +20,8 @@ mongoose
   });
 
 app.use("/users", userRouter);
-app.use("/question", questionRouter);
-app.use("/answer", answerRouter);
+app.use("/questions", questionRouter);
+app.use("/answers", answerRouter);
 
 app.use((_req, res) => {
   return res.status(404).json({

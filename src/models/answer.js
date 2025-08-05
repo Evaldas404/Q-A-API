@@ -5,6 +5,8 @@ const answerSchema = mongoose.Schema({
   text: { type: String, required: true },
   likes: { type: Number, required: true },
   dislikes: { type: Number, required: true },
+  questionId: { type: String, required: true },
+  userId: { type: String, required: true },
   createdAt: { type: Date, required: true },
 });
 
