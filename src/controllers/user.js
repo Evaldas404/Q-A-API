@@ -1,8 +1,10 @@
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { v4 as uuidv4 } from "uuid";
+import UserModel from "../models/user.js";
 
 export const REGISTER_USER = async (req, res) => {
+
   try {
     const salt = await bcrypt.genSalt(10);
     const passwordHash = await bcrypt.hash(req.body.password, salt);
@@ -11,7 +13,7 @@ export const REGISTER_USER = async (req, res) => {
       ...req.body,
       id: uuidv4(),
       createdAt: new Date(),
-      password: [passwordHash],
+      password: passwordHash,
       liked: [],
       disliked: [],
     };
@@ -33,7 +35,7 @@ export const REGISTER_USER = async (req, res) => {
 
 export const LOGIN_USER = async (req, res) => {
   try {
-    const user = await UserModel.findOneI({ email: req.body.email });
+    const user = await UserModel.findOne({ email: req.body.email });
 
     if (!user) {
       return res.status(401).json({
