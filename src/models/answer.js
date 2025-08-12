@@ -2,11 +2,11 @@ import mongoose from "mongoose";
 
 const answerSchema = mongoose.Schema({
   id: { type: String, required: true },
-  text: { type: String, required: true },
-  likes: { type: Number, default: 0, required: true },
-  dislikes: { type: Number, default: 0, required: true },
-  questionId: { type: String, required: true },
-  author: { type: String, required: true },
+  answerText: { type: String, required: true },
+  userId: { type: String, required: true, ref: "User" },
+  questionId: { type: String, required: true, ref: "Question" },
+  likedBy: [{ type: String, ref: "User" }],
+  dislikedBy: [{ type: String, ref: "User" }],
   createdAt: { type: Date, required: true },
 });
 

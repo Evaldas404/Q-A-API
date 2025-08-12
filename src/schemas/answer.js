@@ -1,7 +1,7 @@
 import Joi from "joi";
 
 const answerSchema = Joi.object({
-  text: Joi.string().required(),
+  answerText: Joi.string().required(),
 });
 
 export default answerSchema;

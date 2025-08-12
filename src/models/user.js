@@ -10,14 +10,8 @@ const userSchema = mongoose.Schema({
     match: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
   },
   password: { type: String, required: true },
-  questions: [
-    {
-      id: { type: String, required: true },
-      text: { type: String, required: true },
-      createdAt: { type: Date, required: true },
-    },
-  ],
-  answered: { type: [String], required: true },
+  questions: [String],
+  answered: [String],
   createdAt: { type: Date, required: true },
 });
 

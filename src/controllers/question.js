@@ -1,10 +1,11 @@
 import { v4 as uuidv4 } from "uuid";
 import QuestionModel from "../models/question.js";
 import UserModel from "../models/user.js";
+import AnswerModel from "../models/answer.js";
 
 export const GET_ALL = async (req, res) => {
   try {
-    const questions = await QuestionModel.find();
+    const questions = await QuestionModel.find().sort({ createdAt: -1 });
 
     return res.status(200).json({
       questions: questions,
@@ -20,12 +21,12 @@ export const GET_ALL = async (req, res) => {
 export const INSERT = async (req, res) => {
   try {
     const existingQuestion = await QuestionModel.findOne({
-      text: req.body.text,
+      questionText: req.body.questionText,
     });
 
     if (existingQuestion) {
       return res.status(409).json({
-        message: `Question "${req.body.text}" already exists.`,
+        message: `Question "${req.body.questionText}" already exists.`,
       });
     }
 
@@ -34,23 +35,16 @@ export const INSERT = async (req, res) => {
     const question = {
       ...req.body,
       id: uuidv4(),
-      author: userId,
+      userId: userId,
       createdAt: new Date(),
     };
 
     const newQuestion = new QuestionModel(question);
     const savedQuestion = await newQuestion.save();
 
-    const user = await UserModel.findOne({ id: userId });
-    if (!user) {
-      return res.status(404).json({
-        message: "User not found.",
-      });
-    }
-
     await UserModel.findOneAndUpdate(
       { id: userId },
-      { $push: { questions: savedQuestion } }
+      { $push: { questions: savedQuestion.id } }
     );
 
     return res.status(201).json({
@@ -70,10 +64,17 @@ export const DELETE_BY_ID = async (req, res) => {
     const id = req.params.id;
 
     const question = await QuestionModel.findOneAndDelete({ id: id });
+    const answers = await AnswerModel.deleteMany({ questionId: id });
 
     if (!question) {
       return res.status(404).json({
         message: `Data with id ${id} does not exist`,
+      });
+    }
+
+    if (!answers) {
+      return res.status(404).json({
+        message: "This question has no answers",
       });
     }
 
