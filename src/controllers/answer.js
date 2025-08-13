@@ -54,7 +54,7 @@ export const INSERT = async (req, res) => {
 
     await QuestionModel.findOneAndUpdate(
       { id: questionId },
-      { $push: { answers: savedAnswer.id } }
+      { $push: { answers: savedAnswer } }
     );
 
     return res.status(201).json({
@@ -74,13 +74,17 @@ export const DELETE_BY_ID = async (req, res) => {
   try {
     const id = req.params.id;
 
-    const answer = await AnswerModel.findOneAndDelete(id);
+    const answer = await AnswerModel.findOneAndDelete({ id });
 
-    if (!answer) {
-      return res.status(404).json({
-        message: `Data with id ${id} does not exist`,
-      });
-    }
+    await UserModel.findOneAndUpdate(
+      { answered: id },
+      { $pull: { answered: id } }
+    );
+
+    await QuestionModel.findOneAndUpdate(
+      { "answers.id": id },
+      { $pull: { answers: { id: id } } }
+    );
 
     return res.status(200).json({
       message: "Answer was deleted",
